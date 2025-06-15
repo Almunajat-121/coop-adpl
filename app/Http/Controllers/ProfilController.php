@@ -39,12 +39,28 @@ class ProfilController extends Controller
             return redirect('/login');
         }
         $user = Pengguna::with('akun')->find(session('user')->id);
-        // Barang milik user yang sedang diajukan transaksi (status transaksi = 'diajukan')
         $barang_diajukan = Barang::with(['foto', 'transaksi' => function($q) {
-            $q->where('status', 'diajukan');
-        }])->where('id_pengguna', $user->id)
-          ->whereHas('transaksi', function($q){ $q->where('status', 'diajukan'); })
-          ->get();
+            $q->orderByDesc('id');
+        }])
+        ->where('id_pengguna', $user->id)
+        ->whereHas('transaksi')
+        ->get();
+        // Urutkan barang: yang punya transaksi status diajukan/diterima di atas
+        $barang_diajukan = $barang_diajukan->sortByDesc(function($barang) {
+            return $barang->transaksi->first(function($trx) {
+                return in_array($trx->status, ['diajukan','diterima']);
+            }) ? 1 : 0;
+        })->values();
         return view('jualanku', compact('barang_diajukan'));
+    }
+    
+    public function profilPenjual($id)
+    {
+        $penjual = \App\Models\Pengguna::with('akun')->findOrFail($id);
+        $barang = \App\Models\Barang::with('foto')
+            ->where('id_pengguna', $id)
+            ->orderByDesc('id')
+            ->get();
+        return view('profil-penjual', compact('penjual', 'barang'));
     }
 }

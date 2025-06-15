@@ -9,6 +9,7 @@ use App\Http\Controllers\BarangDetailController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\FotoController;
+use App\Http\Controllers\UlasanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index']);
@@ -38,3 +39,9 @@ Route::post('/laporan/{id}/abaikan', [LaporanController::class, 'abaikan'])->nam
 Route::get('/admin/barang/{id}', [LaporanController::class, 'barangDetail'])->name('admin.barang.detail');
 Route::delete('/admin/barang/{id}', [LaporanController::class, 'hapusBarang'])->name('admin.barang.hapus');
 Route::get('/jualanku', [ProfilController::class, 'jualanku'])->name('jualanku');
+Route::post('/transaksi/{id}/terima', [TransaksiController::class, 'terima'])->name('transaksi.terima');
+Route::post('/transaksi/{id}/selesai', [TransaksiController::class, 'selesai'])->name('transaksi.selesai');
+Route::post('/barang/{id}/habis', [TransaksiController::class, 'habis'])->name('barang.habis');
+Route::get('/ulasan/{id}', [UlasanController::class, 'form'])->name('ulasan.form');
+Route::post('/ulasan/{id}', [UlasanController::class, 'simpan'])->name('ulasan.simpan');
+Route::get('/penjual/{id}', [ProfilController::class, 'profilPenjual'])->name('penjual.profil');

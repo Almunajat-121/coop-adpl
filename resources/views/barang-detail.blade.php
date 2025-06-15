@@ -77,13 +77,15 @@
         <div class="col-md-6">
             <div class="detail-box h-100">
                 <div class="fw-bold mb-1">Informasi Penjual</div>
-                <div class="d-flex align-items-center gap-2 mb-1">
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode($penjual->akun->nama) }}" class="rounded-circle" width="40" height="40">
-                    <div>
-                        <div class="fw-bold">{{ $penjual->akun->nama }}</div>
-                        <div class="text-muted small">{{ $penjual->alamat }}</div>
+                <a href="{{ route('penjual.profil', $penjual->id) }}" style="text-decoration:none;color:inherit;">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode($penjual->akun->nama) }}" class="rounded-circle" width="40" height="40">
+                        <div>
+                            <div class="fw-bold">{{ $penjual->akun->nama }}</div>
+                            <div class="text-muted small">{{ $penjual->alamat }}</div>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
         <div class="col-md-6">
@@ -108,6 +110,17 @@
     @endif
     @if(session('error'))
     <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
+    @if($ulasan->count())
+    <div class="detail-box mb-3">
+        <div class="fw-bold mb-2">Ulasan Pembeli</div>
+        @foreach($ulasan as $u)
+            <div class="mb-2 p-2 border rounded bg-light">
+                <div class="fw-bold">Rating: {{ $u->rating }} / 5</div>
+                <div>{{ $u->isi }}</div>
+            </div>
+        @endforeach
+    </div>
     @endif
 </div>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
