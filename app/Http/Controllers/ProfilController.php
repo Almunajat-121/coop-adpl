@@ -32,4 +32,19 @@ class ProfilController extends Controller
             'rating_avg' => $rating_avg ? number_format($rating_avg, 1) : null,
         ]);
     }
+    
+    public function jualanku()
+    {
+        if (session('role') !== 'pengguna') {
+            return redirect('/login');
+        }
+        $user = Pengguna::with('akun')->find(session('user')->id);
+        // Barang milik user yang sedang diajukan transaksi (status transaksi = 'diajukan')
+        $barang_diajukan = Barang::with(['foto', 'transaksi' => function($q) {
+            $q->where('status', 'diajukan');
+        }])->where('id_pengguna', $user->id)
+          ->whereHas('transaksi', function($q){ $q->where('status', 'diajukan'); })
+          ->get();
+        return view('jualanku', compact('barang_diajukan'));
+    }
 }

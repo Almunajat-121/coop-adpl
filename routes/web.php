@@ -33,3 +33,8 @@ Route::post('/barang/{id}/ajukan', [TransaksiController::class, 'ajukan'])->name
 Route::get('/pesananku', [TransaksiController::class, 'pesananku'])->name('pesananku');
 Route::delete('/foto/{id}', [FotoController::class, 'destroy'])->name('foto.destroy');
 Route::post('/foto/{barang}', [FotoController::class, 'store'])->name('foto.store');
+Route::delete('/laporan/{id}', [LaporanController::class, 'destroy'])->name('laporan.hapus');
+Route::post('/laporan/{id}/abaikan', [LaporanController::class, 'abaikan'])->name('laporan.abaikan');
+Route::get('/admin/barang/{id}', [LaporanController::class, 'barangDetail'])->name('admin.barang.detail');
+Route::delete('/admin/barang/{id}', [LaporanController::class, 'hapusBarang'])->name('admin.barang.hapus');
+Route::get('/jualanku', [ProfilController::class, 'jualanku'])->name('jualanku');

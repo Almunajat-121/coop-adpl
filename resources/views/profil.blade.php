@@ -28,7 +28,7 @@
         <div class="d-flex justify-content-center gap-2 mb-2">
             <a href="{{ route('barang.create') }}" class="btn btn-success">Unggah Barang Baru</a>
             <a href="{{ route('pesananku') }}" class="btn btn-outline-primary">Pesananku</a>
-            <a href="#" class="btn btn-outline-info">Jualanku</a>
+            <a href="{{ route('jualanku') }}" class="btn btn-outline-info">Jualanku</a>
             <form action="{{ route('logout') }}" method="POST" class="d-inline">
                 @csrf
                 <button type="submit" class="btn btn-outline-danger">Logout</button>

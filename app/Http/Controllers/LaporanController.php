@@ -32,4 +32,44 @@ class LaporanController extends Controller
         $laporan = Laporan::with(['barang', 'barang.foto', 'pelapor'])->orderByDesc('id')->get();
         return view('dashboard-admin', compact('laporan'));
     }
+
+    public function destroy($id)
+    {
+        if (!Session::has('user') || Session::get('role') !== 'admin') {
+            return redirect('/login');
+        }
+        $laporan = Laporan::findOrFail($id);
+        $laporan->delete();
+        return redirect()->route('admin.dashboard')->with('success', 'Laporan berhasil dihapus.');
+    }
+
+    public function abaikan($id)
+    {
+        if (!Session::has('user') || Session::get('role') !== 'admin') {
+            return redirect('/login');
+        }
+        // Abaikan laporan: bisa dihapus atau update status, di sini kita hapus saja
+        $laporan = Laporan::findOrFail($id);
+        $laporan->delete();
+        return redirect()->route('admin.dashboard')->with('success', 'Laporan diabaikan.');
+    }
+
+    public function barangDetail($id)
+    {
+        if (!Session::has('user') || Session::get('role') !== 'admin') {
+            return redirect('/login');
+        }
+        $barang = \App\Models\Barang::with(['foto', 'kategori', 'pengguna.akun'])->findOrFail($id);
+        return view('barang-detail-admin', compact('barang'));
+    }
+
+    public function hapusBarang($id)
+    {
+        if (!Session::has('user') || Session::get('role') !== 'admin') {
+            return redirect('/login');
+        }
+        $barang = \App\Models\Barang::findOrFail($id);
+        $barang->delete();
+        return redirect()->route('admin.dashboard')->with('success', 'Barang berhasil dihapus.');
+    }
 }

@@ -29,7 +29,7 @@ class AuthController extends Controller
         if ($admin && Hash::check($request->password, $admin->akun->password)) {
             Session::put('user', $admin->akun);
             Session::put('role', 'admin');
-            return redirect('/');
+            return redirect()->route('admin.dashboard'); // ubah redirect ke halaman laporan
         }
 
         // Cek pengguna
