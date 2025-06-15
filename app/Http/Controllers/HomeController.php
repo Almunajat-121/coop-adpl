@@ -17,6 +17,10 @@ class HomeController extends Controller
         if ($request->filled('kategori')) {
             $query->where('id_kategori', $request->kategori);
         }
+        // Filter agar tidak menampilkan barang milik sendiri
+        if (session('user')) {
+            $query->where('id_pengguna', '!=', session('user')->id);
+        }
         $barang = $query->orderByDesc('id')->get();
         $kategori = Kategori::all();
         return view('home', compact('barang', 'kategori'));

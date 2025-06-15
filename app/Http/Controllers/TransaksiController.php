@@ -27,7 +27,7 @@ class TransaksiController extends Controller
         Transaksi::create([
             'id_barang' => $id,
             'id_pembeli' => Session::get('user')->id,
-            'status' => 'diajukan',
+            'status' => 'terkirim', // gunakan enum yang valid
         ]);
         return back()->with('success', 'Pengajuan transaksi berhasil! Silakan tunggu konfirmasi penjual.');
     }
