@@ -26,23 +26,31 @@ class AuthController extends Controller
         $admin = Admin::with('akun')->whereHas('akun', function($q) use ($request) {
             $q->where('username', $request->username);
         })->first();
-        if ($admin && Hash::check($request->password, $admin->akun->password)) {
-            Session::put('user', $admin->akun);
-            Session::put('role', 'admin');
-            return redirect()->route('admin.dashboard'); // ubah redirect ke halaman laporan
+        if ($admin) {
+            if (Hash::check($request->password, $admin->akun->password)) {
+                Session::put('user', $admin->akun);
+                Session::put('role', 'admin');
+                return redirect()->route('admin.dashboard'); // redirect ke dashboard admin
+            } else {
+                return back()->with('error', 'Password admin salah!');
+            }
         }
 
         // Cek pengguna
         $pengguna = Pengguna::with('akun')->whereHas('akun', function($q) use ($request) {
             $q->where('username', $request->username);
         })->first();
-        if ($pengguna && Hash::check($request->password, $pengguna->akun->password)) {
-            Session::put('user', $pengguna); // simpan objek Pengguna, bukan Akun
-            Session::put('role', 'pengguna');
-            return redirect('/');
+        if ($pengguna) {
+            if (Hash::check($request->password, $pengguna->akun->password)) {
+                Session::put('user', $pengguna);
+                Session::put('role', 'pengguna');
+                return redirect()->route('home'); // redirect ke halaman home
+            } else {
+                return back()->with('error', 'Password pengguna salah!');
+            }
         }
 
-        return back()->with('error', 'Username atau password salah!');
+        return back()->with('error', 'Username tidak ditemukan!');
     }
 
     public function showRegister()

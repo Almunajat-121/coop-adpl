@@ -4,7 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\BarangEditController;
 use App\Http\Controllers\ProfilController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HomeController; // Pastikan ini di-import
 use App\Http\Controllers\BarangDetailController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\TransaksiController;
@@ -12,12 +12,17 @@ use App\Http\Controllers\FotoController;
 use App\Http\Controllers\UlasanController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [HomeController::class, 'index']);
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+// Rute untuk Landing Page (Halaman "tentang aplikasi")
+Route::get('/', [HomeController::class, 'index']); // Ini akan menampilkan 'beranda.blade.php'
+
+// Rute untuk halaman daftar barang yang lama (jika masih ingin dipertahankan)
+Route::get('/home', [HomeController::class, 'showBarang'])->name('home'); // Ubah ke showBarang
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+
+// Rute register sekarang hanya mengarahkan ke halaman login
+Route::get('/register', [AuthController::class, 'showLogin'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 

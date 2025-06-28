@@ -9,6 +9,15 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
+        // Karena ini adalah landing page, kita tidak perlu query barang di sini.
+        // Cukup kembalikan view untuk landing page.
+        return view('beranda');
+    }
+
+    // Opsional: Jika Anda tetap ingin ada halaman terpisah untuk menampilkan barang,
+    // Anda bisa membuat fungsi baru, misalnya 'showBarang', dan atur rutenya di web.php
+    public function showBarang(Request $request)
+    {
         $query = Barang::with(['foto', 'kategori'])
             ->where('status', 'tersedia');
         if ($request->filled('q')) {
@@ -23,6 +32,6 @@ class HomeController extends Controller
         }
         $barang = $query->orderByDesc('id')->get();
         $kategori = Kategori::all();
-        return view('home', compact('barang', 'kategori'));
+        return view('home', compact('barang', 'kategori')); // Tetap mengembalikan view 'home' yang sudah ada untuk daftar barang
     }
 }
