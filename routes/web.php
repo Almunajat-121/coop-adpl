@@ -45,3 +45,5 @@ Route::post('/barang/{id}/habis', [TransaksiController::class, 'habis'])->name('
 Route::get('/ulasan/{id}', [UlasanController::class, 'form'])->name('ulasan.form');
 Route::post('/ulasan/{id}', [UlasanController::class, 'simpan'])->name('ulasan.simpan');
 Route::get('/penjual/{id}', [ProfilController::class, 'profilPenjual'])->name('penjual.profil');
+Route::post('/transaksi/{id}/tolak', [TransaksiController::class, 'tolak'])->name('transaksi.tolak');
+Route::post('/transaksi/{id}/hapus', [TransaksiController::class, 'hapus'])->name('transaksi.hapus');

@@ -11,10 +11,10 @@ class Akun extends Model
 
     public function pengguna()
     {
-        return $this->hasOne(Pengguna::class, 'id', 'id');
+        return $this->hasOne(Pengguna::class, 'id_akun', 'id');
     }
     public function admin()
     {
-        return $this->hasOne(Admin::class, 'id', 'id');
+        return $this->hasOne(Admin::class, 'id_akun', 'id');
     }
 }

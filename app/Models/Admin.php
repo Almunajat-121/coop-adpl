@@ -7,11 +7,11 @@ class Admin extends Model
 {
     protected $table = 'admin';
     public $timestamps = false;
-    protected $fillable = ['id', 'no_pegawai'];
-    public $incrementing = false;
+    protected $fillable = ['id_akun', 'no_pegawai'];
+    public $incrementing = true;
 
     public function akun()
     {
-        return $this->belongsTo(Akun::class, 'id', 'id');
+        return $this->belongsTo(Akun::class, 'id_akun', 'id');
     }
 }

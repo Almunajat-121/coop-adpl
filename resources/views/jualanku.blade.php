@@ -46,6 +46,10 @@
                                         @csrf
                                         <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Terima transaksi ini?')">Terima</button>
                                     </form>
+                                    <form action="{{ route('transaksi.tolak', $trx->id) }}" method="POST" class="d-inline ms-1">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Tolak transaksi ini?')">Tolak</button>
+                                    </form>
                                     @endif
                                     @if($trx->status == 'diterima')
                                     <form action="{{ route('transaksi.selesai', $trx->id) }}" method="POST" class="d-inline">

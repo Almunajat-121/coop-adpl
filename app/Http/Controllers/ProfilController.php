@@ -14,7 +14,13 @@ class ProfilController extends Controller
         if (session('role') !== 'pengguna') {
             return redirect('/login');
         }
+        if (!session('user')) {
+            return redirect('/login')->with('error', 'Silakan login terlebih dahulu.');
+        }
         $user = Pengguna::with('akun')->find(session('user')->id);
+        if (!$user) {
+            return redirect('/login')->with('error', 'Data pengguna tidak ditemukan.');
+        }
         $barang = Barang::with('foto')->where('id_pengguna', $user->id)->get();
         $barang_count = $barang->count();
         $transaksi_count = Transaksi::where('id_pembeli', $user->id)->count();
@@ -38,7 +44,13 @@ class ProfilController extends Controller
         if (session('role') !== 'pengguna') {
             return redirect('/login');
         }
+        if (!session('user')) {
+            return redirect('/login')->with('error', 'Silakan login terlebih dahulu.');
+        }
         $user = Pengguna::with('akun')->find(session('user')->id);
+        if (!$user) {
+            return redirect('/login')->with('error', 'Data pengguna tidak ditemukan.');
+        }
         $barang_diajukan = Barang::with(['foto', 'transaksi' => function($q) {
             $q->orderByDesc('id');
         }])

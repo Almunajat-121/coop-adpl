@@ -27,7 +27,7 @@ class BarangEditController extends Controller
         if (session('role') !== 'pengguna') {
             return redirect('/login');
         }
-        $barang = Barang::findOrFail($id);
+        $barang = Barang::with('foto')->findOrFail($id);
         if ($barang->id_pengguna != session('user')->id) {
             abort(403, 'Akses ditolak');
         }
@@ -37,7 +37,9 @@ class BarangEditController extends Controller
             'tipe' => 'required|in:jual,donasi',
             'harga' => 'nullable|numeric',
             'id_kategori' => 'required|exists:kategori,id',
+            'foto.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+        // Update barang
         $barang->update([
             'nama' => $request->nama,
             'deskripsi' => $request->deskripsi,
@@ -45,6 +47,26 @@ class BarangEditController extends Controller
             'harga' => $request->tipe === 'jual' ? $request->harga : null,
             'id_kategori' => $request->id_kategori,
         ]);
+        // Hapus foto lama jika dicentang
+        if ($request->has('hapus_foto')) {
+            foreach ($request->hapus_foto as $id_foto) {
+                $foto = Foto::where('id', $id_foto)->where('id_barang', $barang->id)->first();
+                if ($foto) {
+                    \Storage::disk('public')->delete($foto->url_foto);
+                    $foto->delete();
+                }
+            }
+        }
+        // Upload foto baru jika ada
+        if ($request->hasFile('foto')) {
+            foreach ($request->file('foto') as $file) {
+                $path = $file->store('foto-barang', 'public');
+                Foto::create([
+                    'id_barang' => $barang->id,
+                    'url_foto' => $path,
+                ]);
+            }
+        }
         return redirect()->route('profil')->with('success', 'Barang berhasil diperbarui!');
     }
 }

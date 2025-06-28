@@ -7,12 +7,12 @@ class Pengguna extends Model
 {
     protected $table = 'pengguna';
     public $timestamps = false;
-    protected $fillable = ['id', 'alamat', 'no_telepon'];
-    public $incrementing = false;
+    protected $fillable = ['id_akun', 'alamat', 'no_telepon'];
+    public $incrementing = true;
 
     public function akun()
     {
-        return $this->belongsTo(Akun::class, 'id', 'id');
+        return $this->belongsTo(Akun::class, 'id_akun', 'id');
     }
     public function barang()
     {

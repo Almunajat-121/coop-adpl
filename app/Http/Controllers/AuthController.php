@@ -37,7 +37,7 @@ class AuthController extends Controller
             $q->where('username', $request->username);
         })->first();
         if ($pengguna && Hash::check($request->password, $pengguna->akun->password)) {
-            Session::put('user', $pengguna->akun);
+            Session::put('user', $pengguna); // simpan objek Pengguna, bukan Akun
             Session::put('role', 'pengguna');
             return redirect('/');
         }
@@ -68,7 +68,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
         Pengguna::create([
-            'id' => $akun->id,
+            'id_akun' => $akun->id, // foreign key ke akun
             'alamat' => $request->alamat,
             'no_telepon' => $request->no_telepon,
         ]);

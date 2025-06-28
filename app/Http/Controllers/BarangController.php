@@ -52,4 +52,37 @@ class BarangController extends Controller
         }
         return redirect()->route('profil')->with('success', 'Barang berhasil diunggah!');
     }
+
+    public function update(Request $request, $id)
+    {
+        if (session('role') !== 'pengguna') {
+            return redirect('/login');
+        }
+        $request->validate([
+            'nama' => 'required',
+            'deskripsi' => 'required',
+            'tipe' => 'required|in:jual,donasi',
+            'harga' => 'nullable|numeric',
+            'id_kategori' => 'required|exists:kategori,id',
+            'foto.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+        $barang = Barang::findOrFail($id);
+        $barang->update([
+            'nama' => $request->nama,
+            'deskripsi' => $request->deskripsi,
+            'tipe' => $request->tipe,
+            'harga' => $request->tipe === 'jual' ? $request->harga : null,
+            'id_kategori' => $request->id_kategori,
+        ]);
+        if ($request->hasFile('foto')) {
+            foreach ($request->file('foto') as $file) {
+                $path = $file->store('barang', 'public');
+                Foto::create([
+                    'id_barang' => $barang->id,
+                    'url_foto' => $path,
+                ]);
+            }
+        }
+        return redirect()->route('profil')->with('success', 'Barang berhasil diperbarui!');
+    }
 }

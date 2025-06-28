@@ -105,6 +105,36 @@
         <button class="detail-btn" disabled>Ajukan pesanan</button>
         @endif
     </div>
+    <!-- Modal Konfirmasi Pesanan -->
+    <div class="modal fade" id="modalKonfirmasiPesanan" tabindex="-1" aria-labelledby="modalKonfirmasiPesananLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalKonfirmasiPesananLabel">Pesanan Sedang Diproses</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <p>Barang <b>{{ $barang->nama }}</b> sudah pernah Anda ajukan dan masih dalam proses pemesanan.</p>
+            <p>Apakah Anda ingin melihat status pesanan Anda?</p>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <a href="{{ route('pesananku') }}" class="btn btn-primary">Lihat Pesananku</a>
+            <button type="button" class="btn btn-secondary" id="btnKembaliSebelumDetail">Kembali</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(session('konfirmasi_pesanan'))
+            var modal = new bootstrap.Modal(document.getElementById('modalKonfirmasiPesanan'));
+            modal.show();
+        @endif
+        document.getElementById('btnKembaliSebelumDetail')?.addEventListener('click', function() {
+            window.history.go(-2);
+        });
+    });
+    </script>
     @if(session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
     @endif

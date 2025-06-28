@@ -46,24 +46,17 @@
             @foreach($barang->foto as $foto)
                 <div class="position-relative">
                     <img src="{{ asset('storage/' . $foto->url_foto) }}" alt="Foto Barang" class="rounded border" style="width:100px;height:100px;object-fit:cover;">
-                    @if(count($barang->foto) > 1)
-                    <form action="{{ route('foto.destroy', $foto->id) }}" method="POST" style="position:absolute;top:0;right:0;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Hapus gambar ini?')">&times;</button>
-                    </form>
-                    @endif
+                    <div class="form-check position-absolute" style="top:0;right:0;">
+                        <input class="form-check-input" type="checkbox" name="hapus_foto[]" value="{{ $foto->id }}" id="hapus_foto_{{ $foto->id }}">
+                        <label class="form-check-label bg-white px-1" for="hapus_foto_{{ $foto->id }}" style="font-size:12px;">Hapus</label>
+                    </div>
                 </div>
             @endforeach
         </div>
-        <form method="POST" action="{{ route('foto.store', $barang->id) }}" enctype="multipart/form-data" class="mb-4">
-            @csrf
-            <div class="mb-3">
-                <label for="foto" class="form-label">Tambah Foto Barang (bisa lebih dari satu)</label>
-                <input type="file" class="form-control" id="foto" name="foto[]" multiple accept="image/*" required>
-            </div>
-            <button type="submit" class="btn btn-success">Tambah Gambar</button>
-        </form>
+        <div class="mb-3">
+            <label for="foto" class="form-label">Tambah Foto Barang (bisa lebih dari satu)</label>
+            <input type="file" class="form-control" id="foto" name="foto[]" multiple accept="image/*">
+        </div>
         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
         <a href="{{ route('profil') }}" class="btn btn-secondary">Batal</a>
     </form>
