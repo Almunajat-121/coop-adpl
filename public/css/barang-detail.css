@@ -1,0 +1,402 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #5fb3b3;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.card {
+    background: rgba(255, 255, 255, 1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+    max-width: 90%; /* Default max-width untuk layar kecil */
+    border-radius: 32px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    animation: slideUp 0.8s ease;
+    position: relative;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #5fb3b3;
+}
+
+/* Back Button */
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    color: #333;
+    transition: all 0.3s ease;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+}
+
+.back-button:hover {
+    background: #fff;
+    transform: scale(1.1);
+}
+/* Image Slider */
+.image-slider {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+}
+
+.slider-container {
+    display: flex;
+    width: 400%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slider-container img {
+    width: 25%;
+    height: 100%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.slider-dots {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dot.active {
+    background: #fff;
+    transform: scale(1.2);
+}
+
+.slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #333;
+    transition: all 0.3s ease;
+    opacity: 0;
+}
+
+.image-slider:hover .slider-nav {
+    opacity: 1;
+}
+
+.prev {
+    left: 16px;
+}
+
+.next {
+    right: 16px;
+}
+
+.slider-nav:hover {
+    background: #fff;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.content {
+    padding: 28px;
+    animation: fadeInUp 1s ease;
+}
+
+.title {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #2c3e50;
+}
+
+.price {
+    font-size: 18px;
+    color: #27ae60;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.section-title {
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: #2c3e50;
+}
+
+.description {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #555;
+    margin-bottom: 24px;
+    background: #f8f9ff;
+    padding: 16px;
+    border-radius: 16px;
+    border-left: 4px solid #5fb3b3;
+}
+
+.chat-box {
+    background: #5fb3b3;
+    border-radius: 20px;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(95, 179, 179, 0.3);
+    flex-wrap: wrap; /* Supaya bisa menyesuaikan di layar kecil */
+}
+
+/* Hover effect tetap */
+.chat-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(95, 179, 179, 0.4);
+}
+
+.chat-box img {
+    width: 24px;
+    height: 24px;
+}
+
+/* Input yang fleksibel */
+.chat-box input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: #fff;
+    padding: 12px 14px;
+    border-radius: 16px;
+    outline: none;
+    font-size: 14px;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Tombol */
+.chat-box a {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    padding: 12px 18px;
+    color: white;
+    border-radius: 16px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-family: "Poppins", sans-serif;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+/* Hover tombol */
+.chat-box button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+/* Media Query: Mobile (maks. 600px) */
+@media (max-width: 600px) {
+    .chat-box {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .chat-box img {
+        align-self: flex-start;
+        margin-bottom: 8px;
+    }
+
+    .chat-box input,
+    .chat-box button {
+        width: 100%;
+    }
+
+    .chat-box button {
+        margin-top: 8px;
+    }
+}
+
+.info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.info-card {
+    background: #5fb3b3;
+    border-radius: 20px;
+    padding: 20px;
+    color: white;
+    box-shadow: 0 4px 12px rgba(95, 179, 179, 0.3);
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(95, 179, 179, 0.4);
+}
+
+.info-card .section-title {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 12px;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.profile img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.profile-info {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 14px;
+}
+
+.profile-info strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.location-card {
+    background: #4a9999;
+}
+
+.order-btn {
+    width: 100%;
+    text-decoration: none;
+    background: red;
+    border: none;
+    color: white;
+    padding: 18px;
+    font-size: 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 700;
+    font-family: "Poppins", sans-serif;
+    box-shadow: 0 6px 16px rgba(95, 179, 179, 0.4);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.order-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(95, 179, 179, 0.5);
+    background: #4a9999;
+}
+
+.order-btn:active {
+    transform: translateY(-1px);
+}
+
+/* --- Modal Bootstrap: urutan z-index standar agar modal-content selalu tampil di atas backdrop --- */
+.modal-backdrop {
+    z-index: 1040 !important;
+    background: rgba(0,0,0,0.3) !important;
+    box-shadow: none !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    opacity: 1 !important;
+}
+.modal {
+    z-index: 1050 !important;
+}
+
+/* Animations */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(60px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        margin: 10px;
+        max-width: none;
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 22px;
+    }
+}
+
+@media (min-width: 640px) {
+    .card {
+        max-width: 870px;
+    }
+}

@@ -4,24 +4,25 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\BarangEditController;
 use App\Http\Controllers\ProfilController;
-use App\Http\Controllers\HomeController; // Pastikan ini di-import
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BarangDetailController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\FotoController;
 use App\Http\Controllers\UlasanController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController; // <-- TAMBAHKAN BARIS INI
 
 // Rute untuk Landing Page (Halaman "tentang aplikasi")
-Route::get('/', [HomeController::class, 'index']); // Ini akan menampilkan 'beranda.blade.php'
+Route::get('/', [HomeController::class, 'index']);
 
-// Rute untuk halaman daftar barang yang lama (jika masih ingin dipertahankan)
-Route::get('/home', [HomeController::class, 'showBarang'])->name('home'); // Ubah ke showBarang
+// Rute untuk halaman daftar barang (sekarang dengan styling baru)
+Route::get('/home', [HomeController::class, 'showBarang'])->name('home');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 
-// Rute register sekarang hanya mengarahkan ke halaman login
+// Rute register sekarang mengarahkan ke halaman login
 Route::get('/register', [AuthController::class, 'showLogin'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -52,3 +53,10 @@ Route::post('/ulasan/{id}', [UlasanController::class, 'simpan'])->name('ulasan.s
 Route::get('/penjual/{id}', [ProfilController::class, 'profilPenjual'])->name('penjual.profil');
 Route::post('/transaksi/{id}/tolak', [TransaksiController::class, 'tolak'])->name('transaksi.tolak');
 Route::post('/transaksi/{id}/hapus', [TransaksiController::class, 'hapus'])->name('transaksi.hapus');
+
+// Rute API untuk Produk (dipanggil oleh home.js)
+Route::get('/products', [ProductController::class, 'getProducts']); // <-- TAMBAHKAN BARIS INI
+// Untuk laporan, sebaiknya hanya bisa dilakukan oleh pengguna yang login
+// Jika Anda belum punya middleware 'cek_pengguna', Anda bisa hapus '.middleware('cek_pengguna')' untuk pengujian awal.
+// Tapi disarankan untuk mengamankan API ini di produksi.
+Route::post('/products/report/{id}', [ProductController::class, 'report']); // middleware cek_pengguna dihapus agar AJAX pelaporan berjalan

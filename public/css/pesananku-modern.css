@@ -1,0 +1,101 @@
+/* pesananku-modern.css - Style harmonis dengan profil.blade.php */
+
+body {
+    background: #f8f9fa;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.pesananku-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: linear-gradient(135deg, #5da599 0%, #4a9b8e 100%);
+    color: #fff;
+    border-radius: 16px;
+    padding: 2rem 2rem 1.5rem 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.pesananku-header .profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+}
+
+.pesananku-header .info {
+    flex: 1;
+}
+
+.pesananku-header .info h2 {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.pesananku-header .stats {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.pesananku-header .stats span {
+    font-weight: 500;
+}
+
+.pesananku-tabs {
+    margin-bottom: 1.5rem;
+}
+
+.pesananku-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.pesananku-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    min-height: 140px;
+    transition: box-shadow 0.2s;
+}
+.pesananku-card:hover {
+    box-shadow: 0 4px 16px rgba(95, 179, 179, 0.18);
+}
+.pesananku-card-img {
+    width: 120px;
+    height: 100%;
+    object-fit: cover;
+    background: #f0f0f0;
+}
+.pesananku-card-body {
+    padding: 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.pesananku-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+.pesananku-card-status {
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 600px) {
+    .pesananku-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.2rem 1rem 1rem 1rem;
+    }
+    .pesananku-list {
+        grid-template-columns: 1fr;
+    }
+}

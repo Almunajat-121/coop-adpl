@@ -26,16 +26,25 @@
         <div class="right-side">
             <div class="form-container">
                 <h2 class="form-title">Registrasi</h2>
-                @session('success')
+                @if(session('success'))
                     <div style="background-color: #4a9b8e;text-align:center;padding:3px;margin-bottom:3px;border-radius:40px">
                         <p style="color:white">{{ session('success') }}</p>
                     </div>
-                @endsession
+                @endif
                 @session('error')
                     <div style="background-color: red;text-align:center;padding:3px;margin-bottom:3px;border-radius:40px">
                         <p style="color:white">{{ session('error') }}</p>
                     </div>
                 @endsession
+                @if($errors->any())
+                    <div style="background-color: orange;text-align:center;padding:3px;margin-bottom:3px;border-radius:40px">
+                        <ul style="color:white; margin:0; padding:0; list-style:none;">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <form method="POST" action="{{ route('register.submit') }}"> {{-- Menggunakan route name --}}
                     @csrf
                     <div class="form-group">
@@ -76,7 +85,6 @@
                 <div class="header-logo">♻</div>
                 <span class="header-text">Reuse & share</span>
             </div>
-
             <div class="main-logo"></div>
             <h1 class="main-title">REUSE & SHARE</h1>
             <p class="main-subtitle">Berbagi Barang, Menyeimbangkan kehidupan.</p>
@@ -85,15 +93,9 @@
                 lanjutkan berbagi dengan komunitas peduli lingkungan.
             </p>
         </div>
-
         <div class="right-side">
             <div class="form-container">
                 <h2 class="form-title">Log in</h2>
-                @if(session('success'))
-                    <div style="background-color: #4a9b8e;text-align:center;padding:3px;margin-bottom:3px;border-radius:40px">
-                        <p style="color:white">{{ session('success') }}</p>
-                    </div>
-                @endif
                 @if(session('error'))
                     <div style="background-color: red;text-align:center;padding:3px;margin-bottom:3px;border-radius:40px">
                         <p style="color:white">{{ session('error') }}</p>

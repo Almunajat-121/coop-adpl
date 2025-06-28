@@ -1,159 +1,184 @@
 @extends('layouts.app')
+
+@push('styles')
+    {{-- Link ke CSS khusus detail barang dengan nama baru --}}
+    <link rel="stylesheet" href="{{ asset('css/barang-detail.css') }}">
+@endpush
+
 @section('content')
-<style>
-.detail-img-carousel { border-radius: 18px; overflow: hidden; }
-.detail-img-carousel img { width: 100%; height: 320px; object-fit: cover; }
-.detail-box { border-radius: 18px; box-shadow: 0 2px 8px #0001; padding: 1.2rem; margin-bottom: 1.2rem; background: #fff; }
-.detail-btn { background: #3ec6b8; color: #fff; border: none; border-radius: 8px; padding: 0.7rem 2.5rem; font-size: 1.1rem; box-shadow: 0 2px 8px #0001; transition: 0.2s; }
-.detail-btn:hover { background: #2bb3a3; }
-</style>
-<div class="container py-4">
-    <div class="row mb-4">
-        <div class="col-12">
-            <div id="carouselFoto" class="carousel slide detail-img-carousel mb-3" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    @foreach($barang->foto as $i => $foto)
-                    <div class="carousel-item{{ $i == 0 ? ' active' : '' }}">
-                        <img src="{{ asset('storage/' . $foto->url_foto) }}" alt="Foto Barang">
-                    </div>
+    <div class="card">
+        {{-- Tombol kembali --}}
+        <button class="back-button" onclick="goBack()">&larr;</button>
+
+        @php
+            // Ambil URL foto dari relasi Barang->Foto
+            $gambarArray = $barang->foto->pluck('url_foto')->toArray();
+        @endphp
+
+        <div class="image-slider">
+            <div class="slider-container" id="sliderContainer">
+                @forelse ($gambarArray as $gambar)
+                    <img src="{{ asset('storage/' . $gambar) }}" alt="Gambar Produk" />
+                @empty
+                    <img src="https://via.placeholder.com/600x400?text=No+Image" alt="No Image" />
+                @endforelse
+            </div>
+
+            @if(count($gambarArray) > 1)
+                <button class="slider-nav prev" onclick="changeSlide(-1)">‹</button>
+                <button class="slider-nav next" onclick="changeSlide(1)">›</button>
+
+                <div class="slider-dots">
+                    @foreach ($gambarArray as $index => $gambar)
+                        <div class="dot {{ $index === 0 ? 'active' : '' }}" onclick="currentSlide({{ $index + 1 }})"></div>
                     @endforeach
                 </div>
-                @if($barang->foto->count() > 1)
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselFoto" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselFoto" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
-                @endif
+            @endif
+        </div>
+
+        <div class="content">
+            <div class="title">{{ $barang->nama }}</div>
+            <div class="price">{{ $barang->tipe == 'jual' ? 'Rp. ' . number_format($barang->harga,0,',','.') : 'Gratis' }}</div>
+            <button class="btn btn-outline-danger mb-3" id="btnLaporkan"><i class="bi bi-flag"></i> Laporkan Barang</button>
+
+            <div class="section-title">Keterangan</div>
+            <p class="description">
+                {{ $barang->deskripsi }}
+            </p>
+
+            {{-- Kirim Pesan ke Penjual --}}
+            <div class="chat-box">
+                <img src="https://img.icons8.com/color/24/whatsapp--v1.png" alt="WhatsApp" />
+                <input type="text" placeholder="Apa ini masih ada?" id="messageInput" />
+                <a href="https://wa.me/62{{ ltrim($penjual->no_telepon, '0') }}?text=Halo! Saya tertarik dengan {{ $barang->nama }}. Apakah masih tersedia?" target="_blank">Kirim</a>
             </div>
-        </div>
-    </div>
-    <div class="row mb-2 align-items-center">
-        <div class="col">
-            <h3 class="fw-bold">{{ $barang->nama }}</h3>
-            <div class="text-muted mb-2">{{ $barang->tipe == 'jual' ? 'Rp. ' . number_format($barang->harga,0,',','.') : 'Gratis' }}</div>
-        </div>
-        <div class="col-auto">
-            <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalLaporkan"><i class="bi bi-flag"></i> Laporkan Barang</button>
-        </div>
-    </div>
-    <!-- Modal Laporkan Barang -->
-    <div class="modal fade" id="modalLaporkan" tabindex="-1" aria-labelledby="modalLaporkanLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <form method="POST" action="{{ route('barang.lapor', $barang->id) }}">
-            @csrf
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalLaporkanLabel">Laporkan Barang</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="alasan" class="form-label">Alasan Laporan</label>
-                        <textarea class="form-control" id="alasan" name="alasan" required minlength="5" placeholder="Jelaskan alasan laporan..."></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-danger">Kirim Laporan</button>
-                </div>
-            </div>
-        </form>
-      </div>
-    </div>
-    <div class="detail-box mb-3">
-        <div class="fw-bold mb-1">Keterangan</div>
-        <div>{{ $barang->deskripsi }}</div>
-    </div>
-    <div class="detail-box mb-3">
-        <div class="fw-bold mb-2"><i class="bi bi-whatsapp text-success"></i> Kirim pesan ke penjual</div>
-        <form action="https://wa.me/62{{ ltrim($penjual->no_telepon, '0') }}" method="get" target="_blank" class="d-flex align-items-center gap-2">
-            <input type="text" class="form-control" name="text" value="Apa ini masih ada?" style="border-radius: 50px;">
-            <button type="submit" class="btn btn-success" style="border-radius: 50px;">Kirim</button>
-        </form>
-    </div>
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <div class="detail-box h-100">
-                <div class="fw-bold mb-1">Informasi Penjual</div>
-                <a href="{{ route('penjual.profil', $penjual->id) }}" style="text-decoration:none;color:inherit;">
-                    <div class="d-flex align-items-center gap-2 mb-1">
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode($penjual->akun->nama) }}" class="rounded-circle" width="40" height="40">
-                        <div>
-                            <div class="fw-bold">{{ $penjual->akun->nama }}</div>
-                            <div class="text-muted small">{{ $penjual->alamat }}</div>
+
+            <div class="info-section">
+                <div class="info-card">
+                    <div class="section-title">👤 Penjual</div>
+                    <div class="profile">
+                        <a href="{{ route('penjual.profil', $penjual->id) }}" style="text-decoration:none;color:inherit;">
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode($penjual->akun->nama) }}" alt="User Profile">
+                        </a>
+                        <div class="profile-info">
+                            <strong>{{ $penjual->akun->nama }}</strong>
+                            <div class="text-muted small">{{ $penjual->no_telepon }}</div>
                         </div>
                     </div>
-                </a>
+                </div>
+
+                <div class="info-card location-card">
+                    <div class="section-title">📍 Lokasi Pengambilan</div>
+                    <div style="font-size: 14px; line-height: 1.5;">
+                        {{ $penjual->alamat }}
+                    </div>
+                </div>
+            </div>
+
+            {{-- Tombol Ajukan Pesanan --}}
+            <div class="text-center">
+                @if(session('role') === 'pengguna' && $barang->id_pengguna != session('user')->id)
+                    <form method="POST" action="{{ route('barang.ajukan', $barang->id) }}">
+                        @csrf
+                        <button type="submit" class="order-btn">Ajukan pesanan</button>
+                    </form>
+                @else
+                    <button class="order-btn" disabled>Ajukan pesanan</button>
+                @endif
+            </div>
+
+            {{-- Section Ulasan Pembeli --}}
+            @if($ulasan->isNotEmpty())
+                <div class="detail-box mb-3" style="margin-top: 30px;">
+                    <div class="fw-bold mb-2">Ulasan Pembeli</div>
+                    @foreach($ulasan as $u)
+                        <div class="mb-2 p-2 border rounded bg-light">
+                            <div class="fw-bold">Rating: {{ $u->rating }} / 5</div>
+                            <div>{{ $u->isi }}</div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div> {{-- Penutup .content --}}
+
+        {{-- Modal Konfirmasi Pesanan (tetap gunakan logic Anda) --}}
+        <div class="modal fade" id="modalKonfirmasiPesanan" tabindex="-1" aria-labelledby="modalKonfirmasiPesananLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalKonfirmasiPesananLabel">Pesanan Sedang Diproses</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p>Barang <b>{{ $barang->nama }}</b> sudah pernah Anda ajukan dan masih dalam proses pemesanan.</p>
+                        <p>Apakah Anda ingin melihat status pesanan Anda?</p>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <a href="{{ route('pesananku') }}" class="btn btn-primary">Lihat Pesananku</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="detail-box h-100">
-                <div class="fw-bold mb-1">Alamat pertemuan</div>
-                <div><i class="bi bi-geo-alt text-danger"></i> {{ $penjual->alamat }}</div>
-            </div>
-        </div>
-    </div>
-    <div class="text-end">
-        @if(session('role') === 'pengguna')
-        <form method="POST" action="{{ route('barang.ajukan', $barang->id) }}">
-            @csrf
-            <button type="submit" class="detail-btn">Ajukan pesanan</button>
-        </form>
-        @else
-        <button class="detail-btn" disabled>Ajukan pesanan</button>
+
+        {{-- Pesan success/error Laravel --}}
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
         @endif
-    </div>
-    <!-- Modal Konfirmasi Pesanan -->
-    <div class="modal fade" id="modalKonfirmasiPesanan" tabindex="-1" aria-labelledby="modalKonfirmasiPesananLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalKonfirmasiPesananLabel">Pesanan Sedang Diproses</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body text-center">
-            <p>Barang <b>{{ $barang->nama }}</b> sudah pernah Anda ajukan dan masih dalam proses pemesanan.</p>
-            <p>Apakah Anda ingin melihat status pesanan Anda?</p>
-          </div>
-          <div class="modal-footer justify-content-center">
-            <a href="{{ route('pesananku') }}" class="btn btn-primary">Lihat Pesananku</a>
-            <button type="button" class="btn btn-secondary" id="btnKembaliSebelumDetail">Kembali</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        @if(session('konfirmasi_pesanan'))
-            var modal = new bootstrap.Modal(document.getElementById('modalKonfirmasiPesanan'));
-            modal.show();
+        @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
-        document.getElementById('btnKembaliSebelumDetail')?.addEventListener('click', function() {
-            window.history.go(-2);
-        });
-    });
-    </script>
-    @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-    @if(session('error'))
-    <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
-    @if($ulasan->count())
-    <div class="detail-box mb-3">
-        <div class="fw-bold mb-2">Ulasan Pembeli</div>
-        @foreach($ulasan as $u)
-            <div class="mb-2 p-2 border rounded bg-light">
-                <div class="fw-bold">Rating: {{ $u->rating }} / 5</div>
-                <div>{{ $u->isi }}</div>
-            </div>
-        @endforeach
-    </div>
-    @endif
-</div>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </div> {{-- Penutup .card --}}
 @endsection
+
+@push('scripts')
+    {{-- Memuat barang-detail.js yang menangani slider gambar dan fungsi goBack --}}
+    <script src="{{ asset('js/barang-detail.js') }}"></script>
+    <script>
+        // Logika untuk menampilkan modal konfirmasi pesanan (dari Blade lama Anda)
+        document.addEventListener('DOMContentLoaded', function() {
+            @if(session('konfirmasi_pesanan'))
+                var modal = new bootstrap.Modal(document.getElementById('modalKonfirmasiPesanan'));
+                modal.show();
+            @endif
+
+            // Logic untuk tombol "Laporkan Barang" (sekarang pakai AJAX)
+            const reportButton = document.querySelector('.btn-outline-danger');
+            if (reportButton) {
+                reportButton.addEventListener('click', function() {
+                    const barangId = {{ $barang->id }};
+                    const alasan = prompt("Tulis alasan laporan untuk produk ini:");
+                    if (alasan === null) return;
+
+                    if (alasan.trim() === "") {
+                        alert("Alasan laporan tidak boleh kosong.");
+                        return;
+                    }
+
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
+                    $.ajax({
+                        url: `/products/report/${barangId}`,
+                        method: "POST",
+                        headers: { "X-CSRF-TOKEN": csrfToken },
+                        data: { alasan: alasan },
+                        success: function (res) {
+                            alert(res.message || "Laporan berhasil dikirim.");
+                        },
+                        error: function (xhr) {
+                            let errorMessage = "Terjadi kesalahan saat mengirim laporan.";
+                            if (xhr.status === 401) {
+                                errorMessage = "Anda harus login sebagai pengguna untuk melapor.";
+                                window.location.href = '/login';
+                            } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMessage = xhr.responseJSON.message;
+                            }
+                            alert(errorMessage);
+                        },
+                    });
+                });
+            }
+        });
+        // jQuery sudah dimuat di layouts/app.blade.php
+    </script>
+@endpush
