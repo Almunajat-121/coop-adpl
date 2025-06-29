@@ -11,9 +11,10 @@ document
 
         // Jika ini upload pertama kali, kosongkan array uploadedImages
         // Ini penting agar tidak menumpuk gambar dari sesi sebelumnya jika ada
-        if (uploadedImages.length === 0) { // Hanya reset jika sebelumnya kosong
-             uploadedImages = [];
-             currentSlideIndex = 0;
+        if (uploadedImages.length === 0) {
+            // Hanya reset jika sebelumnya kosong
+            uploadedImages = [];
+            currentSlideIndex = 0;
         }
 
         files.forEach((file) => {
@@ -58,12 +59,12 @@ function updateImageDisplay() {
             img.src = image.src;
             img.alt = `Product Image ${index + 1}`;
             // Penting: Setiap gambar mengambil 100% dari lebar view yang terlihat
-            img.style.width = `${100 / uploadedImages.length}%`; 
+            img.style.width = `${100 / uploadedImages.length}%`;
             img.style.height = `100%`;
-            img.style.objectFit = `contain`; 
-            img.style.padding = `5px`; 
-            img.style.backgroundColor = `#fff`; 
-            img.style.flexShrink = `0`; 
+            img.style.objectFit = `contain`;
+            img.style.padding = `5px`;
+            img.style.backgroundColor = `#fff`;
+            img.style.flexShrink = `0`;
             img.style.boxSizing = `border-box`; // Pastikan box-sizing di sini
             sliderContainer.appendChild(img);
 
@@ -73,9 +74,9 @@ function updateImageDisplay() {
             sliderDots.appendChild(dot);
         });
 
-        imageCounter.textContent = `${uploadedImages.length > 0 ? (currentSlideIndex + 1) : 0} / ${
-            uploadedImages.length
-        }`;
+        imageCounter.textContent = `${
+            uploadedImages.length > 0 ? currentSlideIndex + 1 : 0
+        } / ${uploadedImages.length}`;
 
         if (currentSlideIndex >= uploadedImages.length) {
             currentSlideIndex = 0;
@@ -119,16 +120,21 @@ function updateSlider() {
     const dots = document.querySelectorAll(".dot");
     const imageCounter = document.getElementById("imageCounter");
 
-    const translateX = -currentSlideIndex * (100 / uploadedImages.length) * uploadedImages.length; // Perbaikan perhitungan geser
-    sliderContainer.style.transform = `translateX(-${currentSlideIndex * 100}%)`; // Geser 100% dari lebar kontainer slider untuk setiap slide
+    const translateX =
+        -currentSlideIndex *
+        (100 / uploadedImages.length) *
+        uploadedImages.length; // Perbaikan perhitungan geser
+    sliderContainer.style.transform = `translateX(-${
+        currentSlideIndex * 100
+    }%)`; // Geser 100% dari lebar kontainer slider untuk setiap slide
 
     dots.forEach((dot, index) => {
         dot.classList.toggle("active", index === currentSlideIndex);
     });
 
-    imageCounter.textContent = `${uploadedImages.length > 0 ? (currentSlideIndex + 1) : 0} / ${
-        uploadedImages.length
-    }`;
+    imageCounter.textContent = `${
+        uploadedImages.length > 0 ? currentSlideIndex + 1 : 0
+    } / ${uploadedImages.length}`;
 }
 
 // Fungsi untuk mengontrol auto-slide
@@ -191,13 +197,18 @@ async function handleSubmit(event, kondisi = "store") {
     // Kita akan tambahkan elemen form secara manual.
 
     // Tambahkan semua field dari form kecuali input type=file (kita tangani terpisah)
-    Array.from(form.elements).forEach(element => {
-        if (element.name && element.type !== 'file' && element.type !== 'submit' && !element.disabled) {
-            if (element.type === 'radio' || element.type === 'checkbox') {
+    Array.from(form.elements).forEach((element) => {
+        if (
+            element.name &&
+            element.type !== "file" &&
+            element.type !== "submit" &&
+            !element.disabled
+        ) {
+            if (element.type === "radio" || element.type === "checkbox") {
                 if (element.checked) {
                     formData.append(element.name, element.value);
                 }
-            } else if (element.name === 'harga' && element.disabled) {
+            } else if (element.name === "harga" && element.disabled) {
                 // Jangan tambahkan harga jika disabled (misal donasi)
                 // Tapi di controller, harga diatur null jika tipe donasi, jadi ini opsional
             } else {
@@ -206,8 +217,10 @@ async function handleSubmit(event, kondisi = "store") {
         }
     });
 
+    console.log(uploadedImages);
+
     // Client-side validation for 'foto' field if required (for 'store' operation)
-    if (uploadedImages.length === 0 && kondisi === 'store') {
+    if (uploadedImages.length === 0 && kondisi === "store") {
         alert("Silakan unggah minimal satu foto barang!");
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;
@@ -223,12 +236,13 @@ async function handleSubmit(event, kondisi = "store") {
 
     try {
         const response = await fetch(form.action, {
-            method: "POST", 
+            method: "POST",
             body: formData,
             headers: {
-                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')
+                "X-CSRF-TOKEN": document
+                    .querySelector('meta[name="csrf-token"]')
                     .getAttribute("content"),
-                'X-Requested-With': 'XMLHttpRequest' // Penting agar Laravel tahu ini permintaan AJAX
+                "X-Requested-With": "XMLHttpRequest", // Penting agar Laravel tahu ini permintaan AJAX
             },
         });
 
@@ -236,29 +250,35 @@ async function handleSubmit(event, kondisi = "store") {
         if (!contentType || !contentType.includes("application/json")) {
             const textResponse = await response.text();
             console.error("Non-JSON Response:", textResponse);
-            alert("Terjadi kesalahan server. Respons bukan JSON. Mohon periksa konsol.");
-            throw new Error("Server did not return JSON. Status: " + response.status);
+            alert(
+                "Terjadi kesalahan server. Respons bukan JSON. Mohon periksa konsol."
+            );
+            throw new Error(
+                "Server did not return JSON. Status: " + response.status
+            );
         }
 
         const result = await response.json();
 
-        if (response.ok) { // Status 2xx OK
+        if (response.ok) {
             alert(result.message || "Operasi berhasil!");
             if (result.redirect) {
                 window.location.href = result.redirect;
             } else {
                 location.reload();
             }
-        } else if (response.status === 422) { // Error validasi (Laravel mengirim 422 JSON)
+        } else if (response.status === 422) {
             const firstError = Object.values(result.errors)[0][0];
             alert("Validasi gagal: " + firstError);
-        } else if (response.status >= 400 && response.status < 500) { // Error klien (4xx)
+        } else if (response.status >= 400 && response.status < 500) {
             alert(result.message || `Terjadi kesalahan: ${response.status}`);
             if (result.redirect) {
                 window.location.href = result.redirect;
             }
-        } else { // Error server (5xx)
-            throw new Error(result.message || `Server error: ${response.status}`);
+        } else {
+            throw new Error(
+                result.message || `Server error: ${response.status}`
+            );
         }
     } catch (error) {
         console.error("AJAX Error:", error);
@@ -274,24 +294,25 @@ async function handleSubmit(event, kondisi = "store") {
 // document.addEventListener('DOMContentLoaded', startAutoSlide);
 
 // Mulai auto-slide saat DOM siap
-document.addEventListener('DOMContentLoaded', startAutoSlide);
+document.addEventListener("DOMContentLoaded", startAutoSlide);
 
 // Pastikan tombol tipe barang juga diinisialisasi
-document.addEventListener('DOMContentLoaded', function() {
-    const tipeSelect = document.getElementById('tipe');
-    const hargaInput = document.getElementById('harga');
+document.addEventListener("DOMContentLoaded", function () {
+    const tipeSelect = document.getElementById("tipe");
+    const hargaInput = document.getElementById("harga");
 
     function toggleHargaInput() {
-        if (tipeSelect.value === 'donasi') {
-            hargaInput.value = '0'; // Set harga 0 jika donasi
+        if (tipeSelect.value === "donasi") {
+            hargaInput.value = "0"; // Set harga 0 jika donasi
             hargaInput.disabled = true;
         } else {
             hargaInput.disabled = false;
-            if (hargaInput.value === '0') { // Clear if it was 0 from donation, ready for input
-                hargaInput.value = '';
+            if (hargaInput.value === "0") {
+                // Clear if it was 0 from donation, ready for input
+                hargaInput.value = "";
             }
         }
     }
-    tipeSelect.addEventListener('change', toggleHargaInput);
+    tipeSelect.addEventListener("change", toggleHargaInput);
     toggleHargaInput(); // Panggil saat DOMContentLoaded untuk inisialisasi awal
 });

@@ -17,7 +17,7 @@
             @endphp
             @if ($penggunaSession && $roleSession === 'pengguna')
                 <div onclick="toggleDropdown()" style="display: flex; align-items: center; cursor: pointer;">
-                    <p style="margin-right: 10px;">{{ $penggunaSession->nama ?? 'Pengguna' }}</p>
+                    <p style="margin-right: 10px;">{{ $penggunaSession->akun->nama ?? 'Pengguna' }}</p>
                     <img src="{{ $avatarUrl }}" alt="avatar" style="width: 40px; height: 40px; border-radius: 50%;">
                 </div>
                 <div id="avatarDropdown"

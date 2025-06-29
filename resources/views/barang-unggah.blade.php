@@ -37,7 +37,8 @@
                         Tambah Gambar
                     </button>
 
-                    <input type="file" id="upload-image" name="foto[]" multiple accept="image/*" hidden> {{-- Input file tersembunyi --}}
+                    <input type="file" id="upload-image" name="foto[]" multiple accept="image/*" hidden>
+                    {{-- Input file tersembunyi --}}
                 </div>
             </div>
         </div>
@@ -50,7 +51,8 @@
                 </div>
             @endif
             @if ($errors->any())
-                <div style="background-color: #f8d7da; padding: 10px; border-radius: 10px; margin-bottom: 20px; color: #721c24;">
+                <div
+                    style="background-color: #f8d7da; padding: 10px; border-radius: 10px; margin-bottom: 20px; color: #721c24;">
                     <ul>
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -59,12 +61,14 @@
                 </div>
             @endif
 
-            <form action="{{ route('barang.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('barang.store') }}" method="POST" enctype="multipart/form-data"
+                onsubmit="handleSubmit(event, 'store')" id="unggahForm">
                 @csrf
 
                 <div class="form-group">
                     <label for="nama">Nama Produk</label>
-                    <input type="text" name="nama" id="nama" placeholder="Masukkan nama produk" value="{{ old('nama') }}" required />
+                    <input type="text" name="nama" id="nama" placeholder="Masukkan nama produk"
+                        value="{{ old('nama') }}" required />
                 </div>
 
                 <div class="form-group">
@@ -77,8 +81,9 @@
                         <label for="id_kategori">Kategori Barang</label>
                         <select name="id_kategori" id="id_kategori" required>
                             <option value="">-- Pilih Kategori --</option>
-                            @foreach($kategori as $cat)
-                                <option value="{{ $cat->id }}" {{ old('id_kategori') == $cat->id ? 'selected' : '' }}>{{ $cat->nama }}</option>
+                            @foreach ($kategori as $cat)
+                                <option value="{{ $cat->id }}" {{ old('id_kategori') == $cat->id ? 'selected' : '' }}>
+                                    {{ $cat->nama }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -93,7 +98,8 @@
 
                 <div class="form-group">
                     <label for="harga">Harga</label>
-                    <input type="number" name="harga" id="harga" placeholder="0" value="{{ old('harga') }}" min="0" />
+                    <input type="number" name="harga" id="harga" placeholder="0" value="{{ old('harga') }}"
+                        min="0" />
                 </div>
 
                 {{-- Lokasi tidak ada di BarangController::store/update, tapi ada di Pengguna --}}

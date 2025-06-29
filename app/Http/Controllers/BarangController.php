@@ -31,8 +31,7 @@ class BarangController extends Controller
         }
 
         $idAkunPengguna = Session::get('user')->id; // Ini adalah ID dari tabel 'akun'
-        $pengguna = Pengguna::where('id_akun', $idAkunPengguna)->first();
-
+        $pengguna = Pengguna::where('id', $idAkunPengguna)->first();
         if (!$pengguna) {
             // Jika objek Pengguna tidak ditemukan di tabel 'pengguna'
             if ($request->ajax() || $request->wantsJson()) {
