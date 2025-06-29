@@ -13,35 +13,54 @@ class ProfilController extends Controller
     public function index()
     {
         if (session('role') !== 'pengguna') {
-            return redirect('/login');
+            return redirect('/login')->with('error', 'Silakan login sebagai pengguna.');
         }
         if (!session('user')) {
-            return redirect('/login')->with('error', 'Silakan login terlebih dahulu.');
+            return redirect('/login')->with('error', 'Sesi login tidak ditemukan. Silakan login terlebih dahulu.');
         }
 
-        $userAkun = Session::get('user'); // Ini adalah objek Akun dari session
-        // Cari objek Pengguna berdasarkan id_akun dari session
-        $user = Pengguna::with('akun')->where('id_akun', $userAkun->id)->first();
+        // Ambil objek Pengguna langsung dari sesi
+        // Berdasarkan AuthController, Session::get('user') seharusnya adalah objek Pengguna
+        $user = Session::get('user');
 
-        if (!$user) {
-            // Jika data pengguna tidak ditemukan di tabel 'pengguna'
-            return redirect('/login')->with('error', 'Data pengguna tidak ditemukan.');
+        // Pastikan objek yang diambil dari sesi adalah instance dari Pengguna
+        // Ini penting jika ada kemungkinan objek lain tersimpan di session
+        if (!($user instanceof Pengguna)) {
+            // Jika bukan objek Pengguna, bisa jadi ada inkonsistensi sesi.
+            // Coba cari Pengguna berdasarkan ID Akun jika session('user') adalah Akun
+            if ($user instanceof \App\Models\Akun) {
+                $user = Pengguna::with('akun')->where('id_akun', $user->id)->first();
+            } else {
+                // Jika bukan Pengguna atau Akun, sesi rusak, arahkan ke login.
+                return redirect('/login')->with('error', 'Data sesi pengguna tidak valid. Silakan login kembali.');
+            }
         }
 
+        // Jika Pengguna tidak ditemukan (misalnya, data di DB sudah dihapus setelah login)
+        if (!$user || !$user->akun) { // Pastikan $user dan $user->akun ada
+            Session::flush(); // Bersihkan sesi yang rusak
+            return redirect('/login')->with('error', 'Data pengguna tidak ditemukan atau tidak lengkap. Silakan login kembali.');
+        }
+
+        // Ambil data terkait
         $barang = Barang::with('foto')->where('id_pengguna', $user->id)->get();
         $barang_count = $barang->count();
 
         $transaksi_count = Transaksi::where('id_pembeli', $user->id)->count();
 
-        $rating_avg = Ulasan::whereIn('id_transaksi', Transaksi::where('id_pembeli', $user->id)->pluck('id'))->avg('rating');
+        // Hitung rata-rata rating
+        $ulasanIds = Transaksi::where('id_pembeli', $user->id)
+                                ->where('status', 'selesai') // Hanya ulasan dari transaksi selesai
+                                ->pluck('id');
+        $rating_avg = Ulasan::whereIn('id_transaksi', $ulasanIds)->avg('rating');
 
         return view('profil', [
-            'user' => (object) [ // Buat objek user agar konsisten dengan panggilan di Blade
+            'user' => (object) [
                 'nama' => $user->akun->nama,
                 'no_telepon' => $user->no_telepon,
                 'alamat' => $user->alamat,
-                'id' => $user->id, // Penting: tambahkan ID pengguna dari tabel pengguna
-                // 'avatar' => $user->avatar_url_jika_ada, // bisa diisi url avatar jika ada
+                'id' => $user->id,
+                // Anda bisa menambahkan 'avatar' di sini jika ada kolom avatar di tabel pengguna
             ],
             'barang' => $barang,
             'barang_count' => $barang_count,
@@ -58,11 +77,12 @@ class ProfilController extends Controller
         if (!session('user')) {
             return redirect('/login')->with('error', 'Silakan login terlebih dahulu.');
         }
-        $userAkun = Session::get('user');
-        $user = Pengguna::with('akun')->where('id_akun', $userAkun->id)->first();
-        if (!$user) {
-            return redirect('/login')->with('error', 'Data pengguna tidak ditemukan.');
+        // Ambil objek Pengguna langsung dari sesi
+        $user = Session::get('user');
+        if (!($user instanceof Pengguna) || !$user->id || !$user->akun) { // Periksa juga user->akun
+            return redirect('/login')->with('error', 'Data pengguna tidak valid atau tidak lengkap. Silakan login kembali.');
         }
+
         $barang_diajukan = Barang::with(['foto', 'transaksi' => function($q) {
             $q->orderByDesc('id');
         }])

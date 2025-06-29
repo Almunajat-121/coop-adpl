@@ -1,101 +1,537 @@
-/* pesananku.css - Style modern untuk halaman Pesananku, konsisten dengan profil */
+ * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-body {
-    background: #f8f9fa;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
 
-.pesananku-header {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    background: linear-gradient(135deg, #5da599 0%, #4a9b8e 100%);
-    color: #fff;
-    border-radius: 16px;
-    padding: 2rem 2rem 1.5rem 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            min-height: 100vh;
+        }
 
-.pesananku-header .profile-avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #fff;
-}
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #4a9b8e, #6bb6aa);
+            color: white;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
 
-.pesananku-header .info {
-    flex: 1;
-}
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="50" cy="50" r="30" fill="rgba(255,255,255,0.1)"/><circle cx="150" cy="100" r="20" fill="rgba(255,255,255,0.1)"/><circle cx="100" cy="150" r="25" fill="rgba(255,255,255,0.1)"/></svg>');
+            opacity: 0.3;
+        }
 
-.pesananku-header .info h2 {
-    margin-bottom: 0.5rem;
-    font-size: 1.5rem;
-}
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-.pesananku-header .stats {
-    display: flex;
-    gap: 1.5rem;
-    margin-bottom: 0.5rem;
-}
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 600;
+        }
 
-.pesananku-header .stats span {
-    font-weight: 500;
-}
+        .recycle-icon {
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a9b8e;
+            font-size: 14px;
+        }
 
-.pesananku-tabs {
-    margin-bottom: 1.5rem;
-}
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
 
-.pesananku-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1.5rem;
-}
+        .header-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
 
-.pesananku-card {
-    background: #fff;
-    border-radius: 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    overflow: hidden;
-    display: flex;
-    flex-direction: row;
-    min-height: 140px;
-    transition: box-shadow 0.2s;
-}
-.pesananku-card:hover {
-    box-shadow: 0 4px 16px rgba(95, 179, 179, 0.18);
-}
-.pesananku-card-img {
-    width: 120px;
-    height: 100%;
-    object-fit: cover;
-    background: #f0f0f0;
-}
-.pesananku-card-body {
-    padding: 1rem;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-.pesananku-card-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-.pesananku-card-status {
-    margin-top: 0.5rem;
-}
+        .header-text h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
 
-@media (max-width: 600px) {
-    .pesananku-header {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 1.2rem 1rem 1rem 1rem;
-    }
-    .pesananku-list {
-        grid-template-columns: 1fr;
-    }
-}
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab.active {
+            background: white;
+            color: #4a9b8e;
+            font-weight: 600;
+        }
+
+        .nav-tab:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+
+        .nav-tab:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Content */
+        .content {
+            padding: 20px;
+        }
+
+        .item-meta {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 10px;
+        }
+
+        .item-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .status-indicator {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .status-pending {
+            background: #ffd700;
+            color: #fff;
+        }
+
+        .status-cancelled {
+            background: #ff6b6b;
+            color: #fff;
+        }
+
+        .status-delivered {
+            background: #28a745;
+            color: #fff;
+        }
+
+        .status-text {
+            color: #666;
+        }
+
+        .item-price {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .order-item {
+            display: flex;
+            gap: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+
+        .order-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .item-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 8px;
+        }
+
+        .stars {
+            display: flex;
+            gap: 2px;
+        }
+
+        .star {
+            width: 12px;
+            height: 12px;
+            background: #ffd700;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+
+        .star.empty {
+            background: #e0e0e0;
+        }
+
+        .rating-text {
+            font-size: 12px;
+            color: #666;
+            margin-left: 5px;
+        }
+
+        .item-location {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline {
+            background: white;
+            color: #4a9b8e;
+            border: 1px solid #4a9b8e;
+        }
+
+        .btn-outline:hover {
+            background: #f0f8f7;
+        }
+
+        .btn-primary {
+            background: #4a9b8e;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3d8276;
+        }
+
+        /* Review Card Styles */
+        .review-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+            position: relative;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .review-item-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .review-item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .review-item-details h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .review-meta {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .review-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .review-content {
+            margin-bottom: 20px;
+        }
+
+        .review-question {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .interactive-rating {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .interactive-star {
+            width: 32px;
+            height: 32px;
+            background: #e0e0e0;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .interactive-star:hover,
+        .interactive-star.active {
+            background: #ffd700;
+            transform: scale(1.1);
+        }
+
+        .review-textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            resize: vertical;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .review-textarea::placeholder {
+            color: #999;
+        }
+
+        .submit-review-btn {
+            background: #4a9b8e;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s ease;
+        }
+
+        .submit-review-btn:hover {
+            background: #3d8276;
+        }
+
+        .submit-review-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal-content p {
+            margin-bottom: 20px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                text-align: center;
+            }
+
+            .header-text h1 {
+                font-size: 32px;
+            }
+
+            .order-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .item-actions {
+                justify-content: center;
+            }
+
+            .review-item-info {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .interactive-rating {
+                gap: 5px;
+            }
+
+            .interactive-star {
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #4a9b8e, #6bb6aa);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo .recycle-icon {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a9b8e;
+            font-size: 30px;
+        }
+
+        .footer-text h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        .footer-text p {
+            font-size: 14px;
+            margin: 5px 0 0 0;
+            opacity: 0.9;
+        }
+
+        .footer-description {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-description p {
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }

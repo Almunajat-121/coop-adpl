@@ -346,15 +346,15 @@ body {
 
 /* --- Modal Bootstrap: urutan z-index standar agar modal-content selalu tampil di atas backdrop --- */
 .modal-backdrop {
-    z-index: 1040 !important;
-    background: rgba(0,0,0,0.3) !important;
-    box-shadow: none !important;
-    filter: none !important;
-    backdrop-filter: none !important;
-    opacity: 1 !important;
+    z-index: 1040;
+    background: rgba(0,0,0,0.3);
+    box-shadow: none;
+    filter: none;
+    backdrop-filter: none;
+    opacity: 1;
 }
 .modal {
-    z-index: 1050 !important;
+    z-index: 1050;
 }
 
 /* Animations */
