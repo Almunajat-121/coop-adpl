@@ -1,0 +1,313 @@
+/* Reset dan general */
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f8; /* Background abu-abu lembut */
+    color: #333;
+    margin: 0;
+    padding: 0; /* Hapus padding body */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Tengah vertikal untuk form di tengah layar */
+    min-height: 100vh; /* Pastikan tinggi minimal 100% viewport */
+}
+
+.container {
+    max-width: 600px; /* Lebar maksimum container utama form */
+    width: 95%; /* Mengisi hampir 100% dari viewport width, tapi dibatasi max-width */
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Penting untuk border-radius */
+    animation: slideUp 0.8s ease-out;
+    padding: 0; /* Hapus padding default container */
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.header {
+    background: linear-gradient(135deg, #4a9b8e 0%, #6bb6a8 100%); /* Warna senada */
+    color: white;
+    padding: 20px;
+    position: relative; /* Penting agar .upload-section bisa diposisikan relatif terhadap ini */
+    padding-bottom: 80px; /* Memberi ruang untuk upload-section */
+}
+
+.back-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    color: white;
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.upload-section {
+    position: absolute;
+    left: 50%;
+    bottom: -80px; /* Menaikkan elemen ke atas header */
+    transform: translateX(-50%);
+    z-index: 10;
+    width: 90%; /* Mengisi lebar hampir penuh container */
+    max-width: 350px; /* Batasi lebar agar tidak terlalu besar */
+}
+
+.upload-container {
+    background: white; /* Background putih agar kontras */
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    text-align: center;
+}
+
+/* Arrow di bawah upload-container (opsional, bisa dihapus jika tidak cocok) */
+.upload-container::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 15px solid white; /* Warna sesuai background container */
+}
+
+/* Image Slider Styles */
+.image-slider {
+    width: 100%;
+    height: 180px; /* Tinggi preview gambar */
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    background-color: #f0f0f0; /* Background saat tidak ada gambar */
+    display: none; /* Awalnya tersembunyi */
+    box-sizing: border-box; /* Penting untuk perhitungan lebar */
+}
+
+.slider-container {
+    display: flex;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-wrap: nowrap; /* Penting agar gambar tidak turun ke baris baru */
+    align-items: center; /* Tengah vertikal gambar */
+}
+
+.slider-container img {
+    min-width: 100%; /* Memastikan setiap gambar mengambil 100% dari lebar view */
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Gunakan 'contain' untuk mencegah zooming/cropping */
+    flex-shrink: 0; /* Penting: Pastikan gambar tidak mengecil */
+    background-color: #fff; /* Latar belakang putih di belakang gambar */
+    padding: 5px; /* Sedikit padding agar tidak terlalu mepet */
+    box-sizing: border-box; /* Penting untuk perhitungan lebar */
+}
+
+.slider-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 5;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dot.active {
+    background: white;
+    transform: scale(1.2);
+}
+
+.slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    transition: all 0.3s ease;
+    opacity: 1; /* Selalu tampil */
+    z-index: 5;
+}
+
+.prev { left: 10px; }
+.next { right: 10px; }
+.slider-nav:hover { background: rgba(0, 0, 0, 0.7); }
+
+.upload-box {
+    width: 100%;
+    height: 180px;
+    background: #f0f0f0;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px dashed #bbb;
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-box:hover {
+    border-color: #38a169;
+    transform: scale(1.01);
+}
+
+.upload-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 8px;
+    stroke: #888;
+    transition: all 0.3s ease;
+}
+.upload-box:hover .upload-icon { stroke: #38a169; transform: translateY(-3px); }
+
+.upload-text {
+    font-size: 0.9rem;
+    color: #888;
+    text-align: center;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.image-counter {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 5;
+}
+
+.add-more-btn {
+    background: #38a169;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 15px;
+    justify-content: center;
+}
+.add-more-btn:hover { background: #2f855a; }
+
+.form-section {
+    padding: 25px;
+    background: white;
+}
+
+.form-group { margin-bottom: 20px; }
+.form-row { display: flex; gap: 20px; }
+.form-row .form-group { flex: 1; }
+
+label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+input[type="text"], input[type="number"], select, textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #fcfcfc;
+    transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #38a169;
+    box-shadow: 0 0 0 3px rgba(56, 161, 105, 0.2);
+}
+
+textarea {
+    height: 100px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.confirm-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #38a169 0%, #4a9b8e 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 15px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 25px;
+    box-shadow: 0 5px 15px rgba(56, 161, 105, 0.3);
+    transition: all 0.3s ease;
+}
+.confirm-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(56, 161, 105, 0.4);
+}
+.confirm-btn:active { transform: translateY(0); }
+
+/* Alert messages */
+.alert {
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    text-align: left;
+}
+.alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.alert-danger { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container { border-radius: 0; padding: 0; }
+    .form-row { flex-direction: column; }
+    .header { border-radius: 0 0 12px 12px; }
+    .upload-section { width: 95%; }
+}
